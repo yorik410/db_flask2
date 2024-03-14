@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Журнал работ</h1>
+<center><h1>Журнал работ</h1></center>
 {% if current_user.is_authenticated %}
     <a href="add_job" class="btn btn-secondary">Добавить работу</a>
 {% endif %}
+<a href="departments" class="btn btn-secondary">Отделы</a>
 {% for item in news%}
 <div>
     <h2>Работа #{{ loop.index }}</h2>

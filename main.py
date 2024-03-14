@@ -6,6 +6,7 @@ from data.users import User
 from data.news import News
 from data.login_form import LoginForm, RegisterForm, AddJobForm, NewsForm
 from data.jobs import Jobs
+from data.departments import Department
 
 
 app = Flask(__name__)
@@ -101,7 +102,6 @@ def register():
 
 
 @app.route('/add_job', methods=['GET', 'POST'])
-@app.errorhandler(403)
 def add_job():
     if not current_user.is_authenticated:
         return 'Доступ запрещен', 403
@@ -127,8 +127,19 @@ def add_job():
     return render_template('add_job.html', title='Добавить работу', form=form)
 
 
+@app.route("/departments")
+def departments():
+    db_sess = db_session.create_session()
+
+    def set_team_leader_name(job):
+        u = db_sess.query(User).filter(User.id == job.chief).first()
+        job.chief_name = f"{u.surname} {u.name}"
+        return job
+    departments_list = list(map(set_team_leader_name, db_sess.query(Department).all()))
+    return render_template('add_job.html', title='Добавить работу', departments=departments_list)
+
+
 @app.route('/edit_job/<int:id>', methods=['GET', 'POST'])
-@app.errorhandler(403)
 def edit_job(id:int):
     db_sess = db_session.create_session()
     if not (current_user.is_authenticated and
@@ -155,7 +166,6 @@ def edit_job(id:int):
 
 
 @app.route('/delete_job/<int:id>')
-@app.errorhandler(403)
 def delete_job(id):
     db_sess = db_session.create_session()
     if not (current_user.is_authenticated and
