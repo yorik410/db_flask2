@@ -25,9 +25,9 @@ class RegisterForm(FlaskForm):
     password = PasswordField('Пароль', validators=[DataRequired()])
     password_again = PasswordField('Повторите пароль',
                                    validators=[DataRequired()])
-    position = StringField("Должность")
-    speciality = StringField("Специальность")
-    address = StringField("Адрес")
+    position = StringField("Должность", validators=[DataRequired()])
+    speciality = StringField("Специальность", validators=[DataRequired()])
+    address = StringField("Адрес", validators=[DataRequired()])
     submit = SubmitField('Зарегистрироваться')
 
     def set_password(self, password):

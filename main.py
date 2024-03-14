@@ -73,8 +73,6 @@ def add_news():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
-    for name, field in form._fields.items():
-        print(name, field)
     if form.validate_on_submit():
         if form.password.data != form.password_again.data:
             return render_template('register.html', title='Регистрация',
@@ -99,7 +97,7 @@ def register():
         db_sess.add(user)
         db_sess.commit()
         return redirect('/login')
-    return render_template('register.html', title='Регистрация', form=form, message="First")
+    return render_template('register.html', title='Регистрация', form=form)
 
 
 @app.route('/add_job', methods=['GET', 'POST'])
