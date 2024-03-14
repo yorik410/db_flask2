@@ -4,7 +4,7 @@ from flask import render_template, redirect
 from data import db_session
 from data.users import User
 from data.news import News
-from data.login_form import LoginForm, RegisterForm, AddJobForm, NewsForm
+from data.login_form import LoginForm, RegisterForm, AddJobForm, NewsForm, AddDepartmentForm
 from data.jobs import Jobs
 from data.departments import Department
 
@@ -136,7 +136,30 @@ def departments():
         job.chief_name = f"{u.surname} {u.name}"
         return job
     departments_list = list(map(set_team_leader_name, db_sess.query(Department).all()))
-    return render_template('add_job.html', title='Добавить работу', departments=departments_list)
+    return render_template('departments.html', title='Отделы', departments=departments_list)
+
+
+@app.route('/add_department', methods=['GET', 'POST'])
+def add_departments():
+    if not current_user.is_authenticated:
+        return 'Доступ запрещен', 403
+    form = AddDepartmentForm()
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        if len(db_sess.query(User).filter(User.email == form.email.data).all()) == 0:
+            return render_template('add_job.html', title='Добавить отдел',
+                                   form=form,
+                                   message="Нельзя добавить незарегистрированного капитана")
+        dep = Department(
+            title=form.title.data,
+            chief=db_sess.query(User).filter(User.email == form.chief.data).first().id,
+            members=form.members.data,
+            email=form.email.data,
+        )
+        db_sess.add(dep)
+        db_sess.commit()
+        return redirect('/departments')
+    return render_template('add_department.html', title='Добавить отдел', form=form)
 
 
 @app.route('/edit_job/<int:id>', methods=['GET', 'POST'])

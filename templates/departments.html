@@ -2,9 +2,9 @@
 
 {% block content %}
 <center><h1>Список отделов</h1></center>
-<a href="departments" class="btn btn-secondary">Работы</a>
+<a href="/" class="btn btn-secondary">Работы</a>
 {% if current_user.is_authenticated %}
-    <a href="add_job" class="btn btn-secondary">Добавить отдел</a>
+    <a href="add_department" class="btn btn-secondary">Добавить отдел</a>
 {% endif %}
 {% for item in departments%}
 <div>

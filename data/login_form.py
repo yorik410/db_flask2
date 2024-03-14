@@ -45,7 +45,15 @@ class AddJobForm(FlaskForm):
     start_date = DateField("Дата начала", validators=[DataRequired()])
     end_date = DateField("Дата окончания")
     is_finished = BooleanField('Работа закончена')
-    submit = SubmitField('Создать')
+    submit = SubmitField('Сохранить')
+
+
+class AddDepartmentForm(FlaskForm):
+    title = StringField('Название отдела', validators=[DataRequired()])
+    chief = EmailField('Почта капитана', validators=[DataRequired()])
+    members = StringField("Работники", validators=[DataRequired()])
+    email = EmailField("Почта отдела", validators=[DataRequired()])
+    submit = SubmitField('Сохранить')
 
 
 class NewsForm(FlaskForm):
